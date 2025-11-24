@@ -1288,6 +1288,11 @@ export class App extends PureComponent<Props, State> {
       appHash === newSessionHash &&
       prevPageScriptHash === newPageScriptHash
     ) {
+      // Clear the transient nodes before executing everything else.
+      this.setState(prevState => ({
+        elements: prevState.elements.clearTransientNodes(fragmentIdsThisRun),
+      }))
+
       this.setState({
         scriptRunId,
       })
