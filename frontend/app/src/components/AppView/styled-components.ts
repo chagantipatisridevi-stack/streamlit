@@ -137,27 +137,39 @@ export const StyledAppViewBlockContainer =
       showPadding,
       hasHeader,
       showToolbar,
-      hasTopNav,
       hasSidebar,
       embedded,
       theme,
     }) => {
       const littlePadding = "2.25rem"
+      const smallPadding = "0.75rem"
 
       // Top padding logic per specification:
+      // We used to add the header height to the padding, but now the header is sticky
+      // and takes its own space in the flow. So we only need to account for the
+      // spacing between the header and the content.
+
+      // The values here are calculated to match the original specification:
+      // Case 1: Non-embedded apps (original: 6rem or 8rem)
+      // -> Header (approx 3.75rem) + littlePadding (2.25rem) ~= 6rem
+      // Case 2: Embedded with show_padding or show_toolbar (original: 6rem)
+      // -> Header (3.75rem) + littlePadding (2.25rem) = 6rem
+      // Case 3: Embedded with header but no padding/toolbar (original: 4.5rem)
+      // -> Header (3.75rem) + smallPadding (0.75rem) = 4.5rem
+      // Case 4: Embedded with no header and no padding/toolbar (original: 2.25rem)
+      // -> No Header + littlePadding (2.25rem) = 2.25rem
+
       let topPadding = littlePadding // Default: 2.25rem
 
-      if (!embedded) {
-        // Non-embedded apps always get 6rem or 8rem
-        topPadding = hasTopNav ? "8rem" : "6rem"
-      } else if (showPadding || showToolbar) {
-        // 6rem if embedded with show_padding or show_toolbar
-        topPadding = "6rem"
-      } else if (hasHeader || hasSidebar) {
-        // 4.5rem if embedded with header but no padding/toolbar
-        topPadding = "4.5rem"
+      if (
+        embedded &&
+        !showPadding &&
+        !showToolbar &&
+        (hasHeader || hasSidebar)
+      ) {
+        // 0.75rem if embedded with header but no padding/toolbar
+        topPadding = smallPadding
       }
-      // Otherwise use default: 2.25rem if embedded with no header and no padding/toolbar
 
       const bottomEmbedPadding =
         showPadding && !hasBottom ? "10rem" : theme.spacing.lg
