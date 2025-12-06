@@ -65,7 +65,15 @@ export interface StreamlitTheme {
   headingColor: string
   borderColorLight: string
   codeTextColor: string
-  widgetBorderColor?: string
+  /**
+   * @deprecated `widgetBorderColor` is deprecated and will be removed in a
+   * future release. Please use `widgetBorderStyle` instead.
+   */
+  widgetBorderColor: string
+  /**
+   * Computed style value that controls widget borders in components.
+   */
+  widgetBorderStyle: string
 
   // Color palette
   redColor: string
